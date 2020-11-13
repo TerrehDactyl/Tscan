@@ -1,9 +1,6 @@
 #include "gtktemplate.h"
-#include <netinet/tcp.h>
 #include <arpa/inet.h>
-#include <unistd.h>
 #include <sys/socket.h>
-#include <netdb.h>
 #define MAX_INT 32767
 void portscan();
 void startscan();
