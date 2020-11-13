@@ -13,14 +13,14 @@ void savetofile();
 // compile with gcc -Wall -g tscan.c -o tscan `pkg-config --cflags --libs gtk+-3.0`
 struct Global_Widgets
 {
-GtkWidget *entries[3];
+	GtkWidget *entries[3];
 }gwidget;
 
 struct input_variables
 {
-const char *entrytext[3];
-size_t label_len;
-int savecount;
+	const char *entrytext[3];
+	size_t label_len;
+	int savecount;
 }input;
 
 int main(int argc, char *argv[])
@@ -32,7 +32,7 @@ GtkWidget *buttonbox;
 GtkWidget *label_grid;
 GtkWidget *entrygrid;
 gchar *buttonlabels[] ={"Start Scan", "Cancel Scan", "Save To File"};
-void *buttoncallbacks [] = {startscan, cancelscan, savetofile};
+void *buttoncallbacks[] = {startscan, cancelscan, savetofile};
 gchar *labels[] = {"Starting Port\n", "Ending Port\n", "IP Address"};
 input.label_len = arraysize(labels);
 
@@ -63,56 +63,56 @@ void startscan()
 	int start = atoi(input.entrytext[0]);
 	int end = atoi(input.entrytext[1]);
 	FILE *filepointer;
+	char hostname[MAX_INT];
 
 	if (input.savecount > 0)
 	{
 		filepointer = fopen("Results.txt", "w");
 	}
 
-for(int i = start; i<=end; i++)
-{
-	server_address.sin_family = AF_INET;
-	server_address.sin_port = htons(i);
-	int network_socket = socket(AF_INET, SOCK_STREAM, 0); 
-	  if (network_socket < 0 ) 
-	  { 
-        printf("socket creation failed...\n"); 
-    } 
-    else
-    {
-        printf("Socket successfully created..\n"); 
-    }
-    char hostname[MAX_INT];
-    strncpy(hostname, input.entrytext[2], 15);
-	server_address.sin_addr.s_addr = inet_addr(input.entrytext[2]);
-	int err = 0;
-	err = connect(network_socket,(struct sockaddr *) &server_address,sizeof server_address);
-	if (err <0)
+	for(int i = start; i<=end; i++)
 	{
-		g_print("Port: %d is closed\n", i);
-
-		if (input.savecount > 0)
+		server_address.sin_family = AF_INET;
+		server_address.sin_port = htons(i);
+		int network_socket = socket(AF_INET, SOCK_STREAM, 0); 
+		if (network_socket < 0 ) 
+		{ 
+			printf("socket creation failed...\n"); 
+		} 
+		else
 		{
-			fprintf(filepointer, "Port: %d is closed\n", i);
+			printf("Socket successfully created..\n"); 
 		}
+		strncpy(hostname, input.entrytext[2], 15);
+		server_address.sin_addr.s_addr = inet_addr(input.entrytext[2]);
+		int err = 0;
+		err = connect(network_socket,(struct sockaddr *) &server_address,sizeof server_address);
+		if (err <0)
+		{
+			g_print("Port: %d is closed\n", i);
+
+			if (input.savecount > 0)
+			{
+				fprintf(filepointer, "Port: %d is closed\n", i);
+			}
+		}
+		else
+		{
+			g_print("Port: %d is open\n", i);
+
+			if (input.savecount > 0)
+			{
+				fprintf(filepointer, "Port: %d is open\n", i);
+			}
+		}
+		close(network_socket);
 	}
-	else
+	g_print("program finished");
+
+	if (input.savecount > 0)
 	{
-		g_print("Port: %d is open\n", i);
-
-		if (input.savecount > 0)
-		{
-			fprintf(filepointer, "Port: %d is open\n", i);
-		}
+		fclose(filepointer);
 	}
-	close(network_socket);
-}
-g_print("program finished");
-
-if (input.savecount > 0)
-		{
-			fclose(filepointer);
-		}
 }
 
 void cancelscan()
