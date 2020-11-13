@@ -64,6 +64,7 @@ void startscan()
 	int end = atoi(input.entrytext[1]);
 	FILE *filepointer;
 	char hostname[MAX_INT];
+	char *result;
 
 	if (input.savecount > 0)
 	{
@@ -89,25 +90,21 @@ void startscan()
 		err = connect(network_socket,(struct sockaddr *) &server_address,sizeof server_address);
 		if (err <0)
 		{
-			g_print("Port: %d is closed\n", i);
-
-			if (input.savecount > 0)
-			{
-				fprintf(filepointer, "Port: %d is closed\n", i);
-			}
+			result = "closed";
 		}
 		else
 		{
-			g_print("Port: %d is open\n", i);
-
-			if (input.savecount > 0)
-			{
-				fprintf(filepointer, "Port: %d is open\n", i);
-			}
+			result = "open";
 		}
+
+		g_print("Port: %d is %s\n", i, result);
+
+		if (input.savecount > 0)
+			{
+				fprintf(filepointer, "Port: %d is %s\n", i, result);
+			}
 		close(network_socket);
 	}
-	g_print("program finished");
 
 	if (input.savecount > 0)
 	{
