@@ -2,7 +2,6 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #define MAX_INT 32767
-void portscan();
 void startscan();
 void cancelscan();
 void savetofile();
@@ -75,11 +74,11 @@ void startscan()
 		int network_socket = socket(AF_INET, SOCK_STREAM, 0); 
 		if (network_socket < 0 ) 
 		{ 
-			printf("socket creation failed...\n"); 
+			g_print("socket creation failed...\n"); 
 		} 
 		else
 		{
-			printf("Socket successfully created..\n"); 
+			g_print("Socket successfully created..\n"); 
 		}
 		strncpy(hostname, input.entrytext[2], 15);
 		server_address.sin_addr.s_addr = inet_addr(input.entrytext[2]);
