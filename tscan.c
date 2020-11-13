@@ -18,9 +18,6 @@ GtkWidget *entries[3];
 
 struct input_variables
 {
-const char *startport;
-const char *endport;
-const char *ipaddress;
 const char *entrytext[3];
 size_t label_len;
 int savecount;
